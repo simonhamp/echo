@@ -27,6 +27,7 @@
   "devDependencies": {
     "@types/node": "^6.0.85",
     "babel-plugin-transform-object-assign": "^6.8.0",
+    "babel-preset-env": "^1.6.1",
     "babel-preset-es2015-rollup": "^3.0.0",
     "babel-preset-stage-2": "^6.5.0",
     "pusher-js": "^3.2.1",
