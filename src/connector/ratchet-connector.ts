@@ -6,7 +6,7 @@ import { RatchetChannel } from './../channel';
  */
 export class RatchetConnector extends Connector {
     /**
-     * The Ratchet connection instance.
+     * The WebSocket connection instance.
      *
      * @type {object}
      */
@@ -22,27 +22,88 @@ export class RatchetConnector extends Connector {
     /**
      * Create a fresh Ratchet connection.
      *
-     * @return void
+     * @return WebSocket
      */
-    connect(): void {
-        var socket = new WebSocket(this.options.host);
+    connect(): WebSocket {
+        this.socket = new WebSocket(this.options.host);
 
-        socket.emit = function (event, message) {
-            if (socket.readyState !== socket.OPEN) {
-                socket.queue = [];
-                socket.queue.push({ event: message });
+        // Extend the socket with a queue for events
+        this.socket.queue = [];
 
-                socket.onopen = function(){
-                    socket.queue.forEach(function(event){
-                        socket.send(event);
-                    });
-                };
-            }
+        // Extend the socket with an emit function (mimic SocketIO API)
+        this.socket.emit = (event: string, message: object) => {
+            return this.emit(event, message);
         };
 
-        this.socket = socket;
+        // Add main event handlers
+        this.socket.addEventListener('open', () => {
+            this.open();
+        });
+
+        this.socket.addEventListener('message', (message) => {
+            this.receive(message);
+        });
 
         return this.socket;
+    }
+
+    /**
+     * Send a packet over the connection.
+     *
+     * @param  {string} event
+     * @param  {object} message
+     * @return {void}
+     */
+    emit(event: string, message: object): void {
+        // Stringify the event
+        var packet = JSON.stringify({"event":event, "message":message});
+
+        // Queue the packet if the connection isn't ready
+        if (this.socket.readyState !== this.socket.OPEN) {
+            this.socket.queue.push(packet);
+            return;
+        }
+
+        // Otherwise send immediately
+        this.socket.send(packet);
+    }
+
+    /**
+     * Handle when the connection is set up successfully.
+     *
+     * @return {void}
+     */
+    open(): void {
+        // Send any queued events
+        var socket = this.socket;
+
+        socket.queue.forEach(function(packet){
+            socket.send(packet);
+        });
+
+        // Reset the queue
+        this.socket.queue = [];
+    }
+
+    /**
+     * Handle a message received from the server.
+     *
+     * @param  {MessageEvent} event
+     * @return {void}
+     */
+    receive(message: MessageEvent): void {
+        // Pick apart the message to determine where it should go
+        var packet = JSON.parse(message.data);
+
+        if (packet.event && packet.channel && typeof packet.data !== "undefined") {
+            // Fire the callbacks for the right event on the appropriate channel
+            this.channel(packet.channel).events[packet.event].forEach(function(callback){
+                callback(packet.channel, packet.data);
+            });
+        } else {
+            // Looks like a poorly formatted message
+            throw 'Invalid message received via socket.';
+        }
     }
 
     /**

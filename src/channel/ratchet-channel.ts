@@ -112,7 +112,6 @@ export class RatchetChannel extends Channel {
             }
         };
 
-        this.socket['on'+event] = listener;
         this.bind(event, listener);
     }
 
@@ -123,8 +122,6 @@ export class RatchetChannel extends Channel {
         let listener = () => {
             this.subscribe();
         };
-
-        //this.socket.on('reconnect', listener);
 
         this.bind('reconnect', listener);
     }
