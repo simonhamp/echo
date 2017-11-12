@@ -1,5 +1,5 @@
 import { Connector } from './connector';
-import { RatchetChannel } from './../channel';
+import { RatchetChannel, RatchetPrivateChannel, RatchetPresenceChannel } from './../channel';
 
 /**
  * This class creates a connnector to a Ratchet server.
