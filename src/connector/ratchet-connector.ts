@@ -104,10 +104,10 @@ export class RatchetConnector extends Connector {
         // Pick apart the message to determine where it should go
         var packet = JSON.parse(message.data);
 
-        if (packet.event && packet.channel && typeof packet.data !== "undefined") {
+        if (packet.event && packet.channel && typeof packet.payload !== "undefined") {
             // Fire the callbacks for the right event on the appropriate channel
             this.channel(packet.channel).events[packet.event].forEach(function(callback){
-                callback(packet.channel, packet.data);
+                callback(packet.channel, packet.payload);
             });
         } else {
             // Looks like a poorly formatted message
