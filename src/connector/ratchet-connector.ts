@@ -25,8 +25,19 @@ export class RatchetConnector extends Connector {
      * @return WebSocket
      */
     connect(): WebSocket {
-        this.socket = new WebSocket(this.options.host);
+        this.socket = new WebSocket(this.options.host, this.options.protocols);
 
+        this.extendSocket();
+
+        return this.socket;
+    }
+
+    /**
+     * Attach event handlers to the socket.
+     *
+     * @return {void}
+     */
+    extendSocket(): void {
         // Extend the socket with a queue for events
         this.socket.queue = [];
 
@@ -43,8 +54,6 @@ export class RatchetConnector extends Connector {
         this.socket.addEventListener('message', (message) => {
             this.receive(message);
         });
-
-        return this.socket;
     }
 
     /**
