@@ -1,6 +1,6 @@
 {
   "name": "laravel-echo-ratchet",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Laravel Echo library for beautiful Pusher, Socket.IO and now Ratchet integration",
   "main": "dist/echo.js",
   "scripts": {
