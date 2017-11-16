@@ -16,7 +16,7 @@ Official documentation [is located here](http://laravel.com/docs/broadcasting).
 
 This fork of Laravel Echo aims to add [Ratchet](http://socketo.me/) support to your application in a way that stays true to the goals of Laravel Echo.
 
-Best used with a purpose-built Ratchet solution for Laravel, e.g. [laravel-ratchet](https://github.com/simonhamp/laravel-ratchet).
+Best used with a purpose-built Ratchet solution for Laravel, e.g. [laravel-ratchet](https://github.com/askedio/laravel-ratchet).
 
 ## Installation
 
