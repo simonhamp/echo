@@ -2,10 +2,11 @@
   "name": "laravel-echo-ratchet",
   "version": "1.4.1",
   "description": "Laravel Echo library for beautiful Pusher, Socket.IO and now Ratchet integration",
+  "license": "MIT",
   "main": "dist/echo.js",
   "scripts": {
     "compile": "./node_modules/.bin/rollup -c",
-    "prepublish": "npm run compile"
+    "prepare": "npm run compile"
   },
   "repository": {
     "type": "git",
