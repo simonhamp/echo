@@ -108,9 +108,13 @@ export class RatchetConnector extends Connector {
 
         if (packet.event && packet.channel && typeof packet.payload !== "undefined") {
             // Fire the callbacks for the right event on the appropriate channel
-            this.channel(packet.channel).events[packet.event].forEach(function(callback){
-                callback(packet.channel, packet.payload);
-            });
+            var events = this.channel(packet.channel).events[packet.event];
+
+            if (typeof events !== "undefined") {
+                events.forEach(function(callback){
+                    callback(packet.channel, packet.payload);
+                });
+            }
         } else {
             // Looks like a poorly formatted message
             throw 'Invalid message received via socket.';
