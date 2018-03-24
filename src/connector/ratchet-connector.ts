@@ -25,7 +25,11 @@ export class RatchetConnector extends Connector {
      * @return WebSocket
      */
     connect(): WebSocket {
-        this.socket = new WebSocket(this.options.host, this.options.protocols);
+        if (this.options.protocols) {
+            this.socket = new WebSocket(this.options.host, this.options.protocols);
+        } else {
+            this.socket = new WebSocket(this.options.host);
+        }
 
         this.extendSocket();
 
